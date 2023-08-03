@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="utf-8">
+  <title>Редактор изображений</title>
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+</head>
+
+<body>
+  <div class="container disable">
+    <h2>Редактор изображений</h2>
+    <div class="wrapper">
+      <div class="editor-panel">
+        <div class="filter">
+          <label class="title">Фильтры</label>
+          <br><br>
+          <div class="options">
+            <button id="brightness" class="active">Яркость</button>
+            <button id="saturation">Насыщенность</button>
+            <button id="inversion">Инверсия</button>
+            <button id="grayscale">Оттенки серого</button>
+          </div>
+          <div class="slider">
+            <div class="filter-info">
+              <p class="name">Яркость</p>
+              <p class="value">100%</p>
+            </div>
+            <input type="range" value="100" min="0" max="200">
+          </div>
+        </div>
+        <div class="rotate">
+          <label class="title">Поворот и отражение</label>
+          <div class="options">
+            <button id="left"><i class="fa-solid fa-rotate-left"></i></button>
+            <button id="right"><i class="fa-solid fa-rotate-right"></i></button>
+            <button id="horizontal"><i class='bx bx-reflect-vertical'></i></button>
+            <button id="vertical"><i class='bx bx-reflect-horizontal'></i></button>
+          </div>
+        </div>
+      </div>
+      <div class="preview-img">
+        <div class="image-wrapper">
+  			<img id="uploaded-image">
+		</div>
+      </div>
+    </div>
+    <div class="controls">
+      <button class="reset-filter">Сбросить фильтры</button>
+      <div class="row">
+        <input type="file" id="upload-input" accept="image/*" hidden>
+        <button id="choose-img" class="choose-img">Выбрать изображение</button>
+        <button id="save-img" class="save-img">Сохранить изображение</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+
+</body>
+
+</html>
