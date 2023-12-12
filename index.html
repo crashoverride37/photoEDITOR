@@ -51,7 +51,7 @@
 				font-size: 15px;
 				text-transform: uppercase;
 				font-weight: bold;
-				color: #2196f3; /* Изначальный цвет текста */
+				color: #2196f3;
 				background: linear-gradient(
 					to right,
 					#181818 0%,
@@ -64,12 +64,12 @@
 			}
 
 			.custom-file-input:hover .text {
-				color: #181818; /* Изменен цвет текста при наведении */
+				color: #181818;
 				background-position: -100% 0;
 			}
 
 			.custom-file-input:active .text {
-				color: #181818; /* Изменен цвет текста при нажатии */
+				color: #181818;
 				background-position: -100% 0;
 			}
 
@@ -89,7 +89,7 @@
 				text-transform: uppercase;
 				border: 1px solid #181818;
 				border-radius: 44px;
-				color: #2196f3; /* Изначальный цвет текста */
+				color: #2196f3;
 				background: linear-gradient(
 					to right,
 					#181818 0%,
@@ -98,12 +98,12 @@
 					#2196f3 100%
 				);
 				background-size: 200% 100%;
-				transition: background-position 0.5s, color 0.5s; /* Добавляем переход для цвета текста */
+				transition: background-position 0.5s, color 0.5s;
 			}
 
 			#downloadButton:hover .text {
-				background-position: -100% 0; /* Смещаем фон влево при наведении */
-				color: #181818; /* Меняем цвет текста при наведении */
+				background-position: -100% 0;
+				color: #181818;
 			}
 
 			* {
@@ -162,7 +162,7 @@
 							transparentCorners: false,
 						})
 
-						// Загрузите изображение рамки
+						
 						fabric.Image.fromURL('1.png', function (fabricFrame) {
 							fabricFrame.set({
 								width: canvas.width,
@@ -173,7 +173,7 @@
 								lockScaling: true,
 							})
 
-							// Применить круглую форму к фрейму
+							
 							fabricFrame.set({
 								clipTo: function (ctx) {
 									ctx.arc(
@@ -186,15 +186,15 @@
 								},
 							})
 
-							// Создать группу из изображения рамки и обработанного изображения
+							
 							const group = new fabric.Group([fabricFrame, fabricImg], {
 								selectable: true,
 							})
 
-							// Добавить группу на холст
+							
 							canvas.add(group)
 
-							// Обновить холст
+							
 							canvas.renderAll()
 						})
 					}
@@ -227,7 +227,7 @@
 					canvas.height
 				)
 
-				// Находим границы обрезанной области
+				
 				let minX = canvas.width
 				let minY = canvas.height
 				let maxX = 0
@@ -245,13 +245,13 @@
 					}
 				}
 
-				// Создаем новый canvas с обрезанной и измененной областью
+				
 				const trimmedCanvas = document.createElement('canvas')
 				trimmedCanvas.width = diameter
 				trimmedCanvas.height = diameter
 				const trimmedContext = trimmedCanvas.getContext('2d')
 
-				// Рисуем обрезанную область как круг
+				
 				trimmedContext.beginPath()
 				trimmedContext.arc(
 					diameter / 2,
@@ -274,9 +274,9 @@
 					diameter
 				)
 
-				// Наложим изображение 1.png поверх обрезанной области
+				
 				const frameImage = new Image()
-				frameImage.src = '1.png' // Укажите путь к изображению рамки
+				frameImage.src = '1.png'
 				trimmedContext.drawImage(frameImage, 0, 0, diameter, diameter)
 
 				return trimmedCanvas.toDataURL('image/png')
