@@ -6,12 +6,7 @@
 		<title>Аватар</title>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.5.0/fabric.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/interactjs@1.10.11/dist/interact.min.js"></script>
-	</head>
 
-	<body>
-		<canvas id="canvas" width="640" height="640"></canvas>
-		<input type="file" id="imageInput" accept="image/*" />
-		<button id="downloadButton">Скачать изображение</button>
 		<style>
 			body {
 				display: flex;
@@ -27,14 +22,112 @@
 				border-radius: 50%;
 				width: 640px;
 				height: 640px;
-				margin-bottom: 20px; /* Пример: добавьте отступ после холста */
+				margin-bottom: 20px;
 			}
 
-			#imageInput,
+			.container {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+			}
+			#imageInput {
+				display: none;
+			}
+
+			.custom-file-input {
+				position: relative;
+				overflow: hidden;
+				cursor: pointer;
+				border: 1px solid black;
+				background-color: #181818;
+				border-radius: 44px;
+				display: inline-block;
+				transition: color 0.5s;
+			}
+
+			.custom-file-input .text {
+				display: block;
+				padding: 16px;
+				font-size: 15px;
+				text-transform: uppercase;
+				font-weight: bold;
+				color: #2196f3; /* Изначальный цвет текста */
+				background: linear-gradient(
+					to right,
+					#181818 0%,
+					#181818 50%,
+					#2196f3 50%,
+					#2196f3 100%
+				);
+				background-size: 200% 100%;
+				transition: background-position 0.5s, color 0.5s;
+			}
+
+			.custom-file-input:hover .text {
+				color: #181818; /* Изменен цвет текста при наведении */
+				background-position: -100% 0;
+			}
+
+			.custom-file-input:active .text {
+				color: #181818; /* Изменен цвет текста при нажатии */
+				background-position: -100% 0;
+			}
+
 			#downloadButton {
-				margin-bottom: 20px; /* Пример: добавьте отступ после элементов input и button */
+				position: relative;
+				overflow: hidden;
+				cursor: pointer;
+				font-weight: bold;
+				border: none;
+				background: none;
+			}
+
+			#downloadButton .text {
+				display: block;
+				padding: 18px;
+				font-size: 15px;
+				text-transform: uppercase;
+				border: 1px solid #181818;
+				border-radius: 44px;
+				color: #2196f3; /* Изначальный цвет текста */
+				background: linear-gradient(
+					to right,
+					#181818 0%,
+					#181818 50%,
+					#2196f3 50%,
+					#2196f3 100%
+				);
+				background-size: 200% 100%;
+				transition: background-position 0.5s, color 0.5s; /* Добавляем переход для цвета текста */
+			}
+
+			#downloadButton:hover .text {
+				background-position: -100% 0; /* Смещаем фон влево при наведении */
+				color: #181818; /* Меняем цвет текста при наведении */
+			}
+
+			* {
+				font-family: sans-serif;
+			}
+			.nothing {
+				width: 20px;
 			}
 		</style>
+	</head>
+
+	<body>
+		<canvas id="canvas" width="640" height="640"></canvas>
+		<div class="container">
+			<label for="imageInput" class="custom-file-input">
+				<span class="text">Выбрать изображение</span>
+				<input type="file" id="imageInput" class="input" accept="image/*" />
+			</label>
+
+			<div class="nothing"></div>
+			<button class="animatedButton" id="downloadButton">
+				<span class="text">Скачать изображение</span>
+			</button>
+		</div>
 
 		<script>
 			document
