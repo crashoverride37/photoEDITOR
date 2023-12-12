@@ -1,65 +1,193 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Аватар</title>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.5.0/fabric.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/interactjs@1.10.11/dist/interact.min.js"></script>
+	</head>
 
-<head>
-  <meta charset="utf-8">
-  <title>Редактор изображений</title>
-  <link rel="stylesheet" href="style.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
-</head>
+	<body>
+		<canvas id="canvas" width="640" height="640"></canvas>
+		<input type="file" id="imageInput" accept="image/*" />
+		<button id="downloadButton">Скачать изображение</button>
+		<style>
+			body {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				height: 100vh;
+				margin: 0;
+			}
 
-<body>
-  <div class="container disable">
-    <h2>Редактор изображений</h2>
-    <div class="wrapper">
-      <div class="editor-panel">
-        <div class="filter">
-          <label class="title">Фильтры</label>
-          <br><br>
-          <div class="options">
-            <button id="brightness" class="active">Яркость</button>
-            <button id="saturation">Насыщенность</button>
-            <button id="inversion">Инверсия</button>
-            <button id="grayscale">Оттенки серого</button>
-          </div>
-          <div class="slider">
-            <div class="filter-info">
-              <p class="name">Яркость</p>
-              <p class="value">100%</p>
-            </div>
-            <input type="range" value="100" min="0" max="200">
-          </div>
-        </div>
-        <div class="rotate">
-          <label class="title">Поворот и отражение</label>
-          <div class="options">
-            <button id="left"><i class="fa-solid fa-rotate-left"></i></button>
-            <button id="right"><i class="fa-solid fa-rotate-right"></i></button>
-            <button id="horizontal"><i class='bx bx-reflect-vertical'></i></button>
-            <button id="vertical"><i class='bx bx-reflect-horizontal'></i></button>
-          </div>
-        </div>
-      </div>
-      <div class="preview-img">
-        <div class="image-wrapper">
-  			<img id="uploaded-image">
-		</div>
-      </div>
-    </div>
-    <div class="controls">
-      <button class="reset-filter">Сбросить фильтры</button>
-      <div class="row">
-        <input type="file" id="upload-input" accept="image/*" hidden>
-        <button id="choose-img" class="choose-img">Выбрать изображение</button>
-        <button id="save-img" class="save-img">Сохранить изображение</button>
-      </div>
-    </div>
-  </div>
+			#canvas {
+				border: 1px solid #ccc;
+				border-radius: 50%;
+				width: 640px;
+				height: 640px;
+				margin-bottom: 20px; /* Пример: добавьте отступ после холста */
+			}
 
-  <script src="main.js"></script>
+			#imageInput,
+			#downloadButton {
+				margin-bottom: 20px; /* Пример: добавьте отступ после элементов input и button */
+			}
+		</style>
 
-</body>
+		<script>
+			document
+				.getElementById('imageInput')
+				.addEventListener('change', handleImage)
 
+			function handleImage(e) {
+				const canvas = new fabric.Canvas('canvas', {
+					width: 640,
+					height: 640,
+					selection: false,
+				})
+
+				const reader = new FileReader()
+
+				reader.onload = function (event) {
+					const img = new Image()
+					img.onload = function () {
+						const fabricImg = new fabric.Image(img, {
+							width: img.width,
+							height: img.height,
+							left: (canvas.width - img.width) / 2,
+							top: (canvas.height - img.height) / 2,
+							selectable: true,
+						})
+
+						fabricImg.set({
+							class: 'rounded-image',
+							borderColor: '#ccc',
+							cornerColor: '#ccc',
+							cornerSize: 10,
+							transparentCorners: false,
+						})
+
+						// Загрузите изображение рамки
+						fabric.Image.fromURL('1.png', function (fabricFrame) {
+							fabricFrame.set({
+								width: canvas.width,
+								height: canvas.height,
+								selectable: false,
+								lockMovementX: true,
+								lockMovementY: true,
+								lockScaling: true,
+							})
+
+							// Применить круглую форму к фрейму
+							fabricFrame.set({
+								clipTo: function (ctx) {
+									ctx.arc(
+										canvas.width / 2,
+										canvas.height / 2,
+										canvas.width / 2,
+										0,
+										2 * Math.PI
+									)
+								},
+							})
+
+							// Создать группу из изображения рамки и обработанного изображения
+							const group = new fabric.Group([fabricFrame, fabricImg], {
+								selectable: true,
+							})
+
+							// Добавить группу на холст
+							canvas.add(group)
+
+							// Обновить холст
+							canvas.renderAll()
+						})
+					}
+					img.src = event.target.result
+				}
+
+				reader.readAsDataURL(e.target.files[0])
+			}
+
+			document
+				.getElementById('downloadButton')
+				.addEventListener('click', function () {
+					const canvas = document.getElementById('canvas')
+					const imageDataUrl = getTrimmedCanvasDataURL(canvas)
+					const downloadLink = document.createElement('a')
+					downloadLink.href = imageDataUrl
+					downloadLink.download = 'avatar.png'
+					document.body.appendChild(downloadLink)
+					downloadLink.click()
+					document.body.removeChild(downloadLink)
+				})
+
+			function getTrimmedCanvasDataURL(canvas) {
+				const diameter = 640
+				const context = canvas.getContext('2d')
+				const imageData = context.getImageData(
+					0,
+					0,
+					canvas.width,
+					canvas.height
+				)
+
+				// Находим границы обрезанной области
+				let minX = canvas.width
+				let minY = canvas.height
+				let maxX = 0
+				let maxY = 0
+
+				for (let y = 0; y < canvas.height; y++) {
+					for (let x = 0; x < canvas.width; x++) {
+						const alpha = imageData.data[(y * canvas.width + x) * 4 + 3]
+						if (alpha > 0) {
+							minX = Math.min(minX, x)
+							minY = Math.min(minY, y)
+							maxX = Math.max(maxX, x)
+							maxY = Math.max(maxY, y)
+						}
+					}
+				}
+
+				// Создаем новый canvas с обрезанной и измененной областью
+				const trimmedCanvas = document.createElement('canvas')
+				trimmedCanvas.width = diameter
+				trimmedCanvas.height = diameter
+				const trimmedContext = trimmedCanvas.getContext('2d')
+
+				// Рисуем обрезанную область как круг
+				trimmedContext.beginPath()
+				trimmedContext.arc(
+					diameter / 2,
+					diameter / 2,
+					diameter / 2,
+					0,
+					2 * Math.PI
+				)
+				trimmedContext.closePath()
+				trimmedContext.clip()
+				trimmedContext.drawImage(
+					canvas,
+					minX,
+					minY,
+					maxX - minX + 1,
+					maxY - minY + 1,
+					0,
+					0,
+					diameter,
+					diameter
+				)
+
+				// Наложим изображение 1.png поверх обрезанной области
+				const frameImage = new Image()
+				frameImage.src = '1.png' // Укажите путь к изображению рамки
+				trimmedContext.drawImage(frameImage, 0, 0, diameter, diameter)
+
+				return trimmedCanvas.toDataURL('image/png')
+			}
+		</script>
+	</body>
 </html>
