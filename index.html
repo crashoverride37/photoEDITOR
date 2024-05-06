@@ -6,6 +6,29 @@
 <title>Калькулятор путевых листов</title>
 <!-- Bootstrap CSS -->
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    body {
+        background-color: #000;
+        color: #fff;
+    }
+    .container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .form-group label {
+        color: #000;
+    }
+    .btn-primary {
+        background-color: #000;
+        border-color: #000;
+    }
+    .btn-primary:hover {
+        background-color: #555;
+        border-color: #555;
+    }
+</style>
 </head>
 <body>
 <div class="container">
@@ -36,21 +59,21 @@ function calculate() {
     var distance = parseInt(document.getElementById('distance').value);
     var days = parseInt(document.getElementById('days').value);
 
-    var mileagePerDay = Math.round(distance / days);
-    var remainder = distance % days;
-
     var endMileage = startMileage;
-    var result = "";
+    var result = "<table class='table table-striped'><thead><tr><th scope='col'>Показания спидометра</th><th scope='col'>Пробег за день</th></tr></thead><tbody>";
 
+    var remainingDistance = distance;
     for (var i = 0; i < days; i++) {
-        if (i === days - 1) {
-            endMileage += mileagePerDay + remainder;
-            result += "КОНЕЧНЫЙ (" + endMileage + "): " + (mileagePerDay + remainder) + "<br>";
-        } else {
-            endMileage += mileagePerDay;
-            result += " (" + endMileage + "): " + mileagePerDay + "<br>";
-        }
+        var minMileageToday = Math.max(30, distance / days - 10);
+        var maxMileageToday = Math.min(300, distance / days + 10);
+        var mileageToday = i === days - 1 ? remainingDistance : Math.round(Math.random() * (maxMileageToday - minMileageToday) + minMileageToday);
+
+        endMileage += mileageToday;
+        remainingDistance -= mileageToday;
+        result += "<tr><td>" + endMileage + "</td><td>" + mileageToday + "</td></tr>";
     }
+
+    result += "</tbody></table>";
 
     document.getElementById('result').innerHTML = result;
 }
