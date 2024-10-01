@@ -28,17 +28,21 @@
         background-color: #555;
         border-color: #555;
     }
-  h2{
-    color: black;
-  }
+    h2 {
+        color: black;
+    }
+    .selected {
+        background-color: #007bff !important; /* Цвет выделенной строки */
+        color: #fff !important; /* Цвет текста выделенной строки */
+    }
 </style>
 </head>
 <body>
 <div class="container">
-    <h2 class="mt-5 dark">OTO</h2>
+    <h2 class="mt-5 dark">OTO УП г. Петропавловска</h2>
     <form id="calcForm" class="mt-4">
         <div class="form-group">
-            <label for="startMileage">Показания спидометра (начальные):</label>
+            <label for="startMileage">Показания спидометра (на начало месяца):</label>
             <input type="number" class="form-control" id="startMileage" name="startMileage">
         </div>
         <div class="form-group">
@@ -73,12 +77,22 @@ function calculate() {
 
         endMileage += mileageToday;
         remainingDistance -= mileageToday;
-        result += "<tr><td>" + endMileage + "</td><td>" + mileageToday + "</td></tr>";
+        result += "<tr onclick='highlightRow(this)'><td>" + endMileage + "</td><td>" + mileageToday + "</td></tr>";
     }
 
     result += "</tbody></table>";
 
     document.getElementById('result').innerHTML = result;
+}
+
+function highlightRow(row) {
+    // Убираем выделение со всех строк
+    var rows = row.parentNode.children;
+    for (var i = 0; i < rows.length; i++) {
+        rows[i].classList.remove('selected');
+    }
+    // Добавляем выделение на текущую строку
+    row.classList.add('selected');
 }
 </script>
 </body>
